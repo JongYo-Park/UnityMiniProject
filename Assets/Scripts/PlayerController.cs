@@ -4,19 +4,22 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float moveSpeed = 5f;
-    public float RotateSpeed = 2f;
-    public Transform player;
-    public Camera playerCam;
-
-    private float xRotation = 0f;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float rotateSpeed;
 
     private void Update()
     {
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
 
-        Vector3 move = transform.right * horizontal + transform.forward * vertical;
-        transform.position += move * moveSpeed * Time.deltaTime;
+        Vector3 moveDir = new Vector3(x, 0, z);
+        if (moveDir == Vector3.zero)
+            return;
+
+        transform.Translate(moveDir.normalized * moveSpeed * Time.deltaTime, Space.World);
+
+        Quaternion lookRot = Quaternion.LookRotation(moveDir);
+        
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, lookRot, rotateSpeed);
     }
 }
