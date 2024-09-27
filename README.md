@@ -1,6 +1,8 @@
 # UnityMiniProject
  유니티 미니게임 만들기
 1. 맵 구현
+   -시작화면 구현
+   -Clear(보상) 장면 구현
 2. 캐릭터 이동 구현
 3. 캐릭터 행동 구현
    -Idle
@@ -14,6 +16,5 @@
    - Attack
    - Damaged
    - Dead
-5. 시작화면 구현
-6. Clear 장면 구현
-7. 캐릭터 종류 선택 구현(Boy & Girl)
+5. Coin 및 Score 구현
+6. 캐릭터 종류 선택 구현(Boy & Girl)
