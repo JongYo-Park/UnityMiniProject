@@ -7,8 +7,10 @@ public class EnemyMover : MonoBehaviour
 {
     [SerializeField] NavMeshAgent agent;
     [SerializeField] Transform target;
-    [SerializeField] float lookDistance = 10f;
+    [SerializeField] float lookDistance = 8f;
+    [SerializeField] Animator animator;
 
+    private bool playerInRange = false;
 
 
     private void Start()
@@ -26,12 +28,34 @@ public class EnemyMover : MonoBehaviour
             if (distance <= lookDistance)
             {
                 agent.destination = target.position;
+                animator.SetBool("isWalking", true);
             }
             else
             {
                 agent.destination = transform.position;
+                animator.SetBool("isWalking", false);
+                animator.SetBool("isIdle", true); 
             }
             yield return delay;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = true;
+            animator.SetBool("isWalking", false);
+            animator.SetBool("isIdle", false);
+            animator.SetTrigger("attack");
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInRange = false; 
+            animator.SetBool("isIdle", true); 
         }
     }
 }
