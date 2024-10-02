@@ -11,8 +11,11 @@ public class Monster : MonoBehaviour
     [SerializeField] int maxHP = 3;
     private int curHP;
     [SerializeField] Animator animator;
+    [SerializeField] AudioSource audioSource;
+    [SerializeField] AudioClip attackSound;
 
     private bool isAttacking = false;
+    private bool isDead = false;
     private float attackCooltime = 2f;
 
     private void Start()
@@ -25,7 +28,7 @@ public class Monster : MonoBehaviour
     {
         WaitForSeconds delay = new WaitForSeconds(0.2f);
     
-        while (true)
+        while (!isDead) 
         {
             float distance = Vector3.Distance(transform.position, target.position);
 
@@ -42,6 +45,7 @@ public class Monster : MonoBehaviour
 
             yield return delay;
         }
+        animator.SetBool("isWalking", false);
     }
     
     private void OnTriggerEnter(Collider other)
@@ -61,7 +65,7 @@ public class Monster : MonoBehaviour
     }
     private void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && !isAttacking)
+        if (other.CompareTag("Player") && !isAttacking && !isDead)
         {
             float distance = Vector3.Distance(transform.position, target.position);
             if (distance <= lookDistance)
@@ -75,6 +79,8 @@ public class Monster : MonoBehaviour
     {
         isAttacking = true;
         animator.SetTrigger("Attack");
+        yield return new WaitForSeconds(0.5f);
+        audioSource.PlayOneShot(attackSound);
 
         yield return new WaitForSeconds(1f);
 
@@ -96,7 +102,9 @@ public class Monster : MonoBehaviour
     }
     private void Die()
     {
+        isDead = true;
         animator.SetTrigger("Dead");
+        agent.isStopped = true;
         Destroy(gameObject, 5f);
     }
 }

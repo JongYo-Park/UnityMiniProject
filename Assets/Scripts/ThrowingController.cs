@@ -5,50 +5,28 @@ using UnityEngine;
 public class ThrowingController : MonoBehaviour
 {
     [SerializeField] GameObject rockPrefab;
-    [SerializeField] Transform ThrowingPoint;
-    [SerializeField] float rockTime = 0.5f;
+    [SerializeField] Transform throwingPoint;
+    [SerializeField] float rockTime = 2f;
 
-    private Coroutine throwingCoroutine;
 
     private void Update()
     {
-
         if (Input.GetKeyDown(KeyCode.S))
         {
-            if (throwingCoroutine == null)
-            {
-                throwingCoroutine = StartCoroutine(ThrowCoroutine());
-            }
-        }
-        else if (Input.GetKeyUp(KeyCode.S))
-        {
-            if (throwingCoroutine != null)
-            {
-                StopCoroutine(throwingCoroutine);
-                throwingCoroutine = null;
-            }
+            Throw();
         }
     }
-
-
 
     private void Throw()
     {
-        GameObject rock = Instantiate(rockPrefab, ThrowingPoint.position, ThrowingPoint.rotation);
-        Rock rocks = rock.GetComponent<Rock>();
-        Debug.Log("돌 던지기");
+        GameObject rock = Instantiate(rockPrefab, throwingPoint.position, throwingPoint.rotation);
+
+        StartCoroutine(DestroyRockAfterTime(rock, rockTime));
     }
 
-    IEnumerator ThrowCoroutine()
+    private IEnumerator DestroyRockAfterTime(GameObject rock, float time)
     {
-        yield return new WaitForSeconds(2f);
-
-        WaitForSeconds delay = new WaitForSeconds(rockTime);
-
-        while (true)
-        {
-            Throw();
-            yield return delay;
-        }
+        yield return new WaitForSeconds(time);
+        Destroy(rock);
     }
 }

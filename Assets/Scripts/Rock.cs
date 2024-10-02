@@ -20,7 +20,10 @@ public class Rock : MonoBehaviour
         if (collision.gameObject.tag == "Monster")
         {
             Monster monster = collision.gameObject.GetComponent<Monster>();
-            monster.TakeDamage(damage);
+            if (monster != null)
+            {
+                monster.TakeDamage(damage);
+            }
         }
 
         Destroy(gameObject);
