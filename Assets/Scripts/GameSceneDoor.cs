@@ -9,7 +9,6 @@ public class GameSceneDoor : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("보상씬으로 이동");
             SceneManager.LoadScene("RewardScene");
         }
     }

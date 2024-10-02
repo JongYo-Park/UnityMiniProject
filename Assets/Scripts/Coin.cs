@@ -9,7 +9,12 @@ public class Coin : MonoBehaviour
     [SerializeField] float rotateSpeed = 50f;
 
     private ScoreManager scoreManager;
+    private AudioSource audioSource;
 
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     private void Update()
     {
@@ -20,8 +25,14 @@ public class Coin : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
+            audioSource.Play();
             Debug.Log($"ÄÚÀÎ È¹µæ, Á¡¼ö {score} È¹µæ");
-            Destroy(gameObject);
+            StartCoroutine(DestroyCoinAfterSound());
         }
+    }
+    private IEnumerator DestroyCoinAfterSound()
+    {
+        yield return new WaitForSeconds(audioSource.clip.length - 0.5f);
+        Destroy(gameObject);
     }
 }
